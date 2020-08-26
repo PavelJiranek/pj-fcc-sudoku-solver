@@ -2,8 +2,10 @@
   "name": "sudoku-solver",
   "version": "1.0.0",
   "description": "Quality Assurance 4: Sudoku Solver",
+  "author": "Pavel Jiranek",
   "main": "index.js",
   "scripts": {
+    "yarn-install": "yarn install",
     "start": "nodemon server.js",
     "test": "mocha --require @babel/register --recursive --exit --ui tdd tests/"
   },

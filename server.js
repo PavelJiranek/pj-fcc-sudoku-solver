@@ -31,9 +31,11 @@ app.use(function(req, res, next) {
     .send('Not Found');
 });
 
+const DEFAULT_PORT = 3000;
+
 //Start our server and tests!
-app.listen(process.env.PORT || 3000, function () {
-  console.log("Listening on port " + process.env.PORT);
+app.listen(process.env.PORT || DEFAULT_PORT, function () {
+  console.log(`Listening on port ${process.env.PORT || DEFAULT_PORT}`);
   // process.env.NODE_ENV='test'
   if (process.env.NODE_ENV==='test') {
     console.log('Running Tests...');
