@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
 const COLUMNS_MAP = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const VALID_CELL_VALUES = COLUMNS_MAP.map(String);
 const ROWS_MAP = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+const VALID_PUZZLE_LENGTH = 81;
 
 const getArrayPuzzle = stringPuzzle => splitEvery(9, stringPuzzle);
 /**
@@ -59,7 +60,7 @@ const fillCells = stringPuzzle => stringPuzzle.split('').forEach((val, valIdx) =
   }
 })
 
-const handleTextChange = (({ target: { value } }) => value.length === 81 && fillCells(value));
+const handleTextChange = (({ target: { value } }) => value.length === VALID_PUZZLE_LENGTH && fillCells(value));
 
 /*
   Export your functions for testing in Node.
@@ -70,6 +71,7 @@ try {
   module.exports = {
     isValidInput,
     getArrayPuzzle,
+    fillCells
   }
 } catch (e) {
 }
