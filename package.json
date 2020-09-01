@@ -20,10 +20,12 @@
     "express": "^4.17.1",
     "jsdom": "^16.2.2",
     "mocha": "^7.1.1",
-    "nodemon": "^2.0.4",
+    "nodemon": "^2.0.4"
+  },
+  "devDependencies": {
     "ramda": "^0.27.1",
     "ramda-adjunct": "^2.27.0",
-    "sudoku-solver": "^0.0.2"
+    "sudoku-solver-js": "^0.1.4"
   },
   "license": "MIT"
 }

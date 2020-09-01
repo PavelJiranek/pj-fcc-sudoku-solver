@@ -11,18 +11,25 @@ const assert = chai.assert;
 
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
+const R = require("ramda");
+const RA = require("ramda-adjunct");
+const SudokuSolver = require("sudoku-solver-js");
+
 let Solver;
 
 suite('UnitTests', () => {
   suiteSetup(() => {
     // Mock the DOM for testing and load Solver
     return JSDOM.fromFile('./views/index.html')
-      .then((dom) => {
-        global.window = dom.window;
-        global.document = dom.window.document;
+        .then((dom) => {
+          global.window = dom.window;
+          global.document = dom.window.document;
+          global.R = R;
+          global.RA = RA;
+          global.SudokuSolver = SudokuSolver;
 
-        Solver = require('../public/sudoku-solver.js');
-      });
+          Solver = require('../public/sudoku-solver.js');
+        });
   });
   
   // Only the digits 1-9 are accepted
@@ -30,24 +37,35 @@ suite('UnitTests', () => {
   suite('Function ____()', () => {
     test('Valid "1-9" characters', (done) => {
       const input = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
-
-      // done();
+      input.forEach(val => assert.isTrue(Solver.isValidInput(val)));
+      done();
     });
 
     // Invalid characters or numbers are not accepted 
     // as valid input for the puzzle grid
     test('Invalid characters (anything other than "1-9") are not accepted', (done) => {
       const input = ['!', 'a', '/', '+', '-', '0', '10', 0, '.'];
-
-      // done();
+      input.forEach(val => assert.isFalse(Solver.isValidInput(val)));
+      done();
     });
   });
   
   suite('Function ____()', () => {
     test('Parses a valid puzzle string into an object', done => {
       const input = '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..';
-      
-      // done();
+      // console.log(Solver.getArrayPuzzle(input))
+      assert.deepEqual(Solver.getArrayPuzzle(input), [
+        "..9..5.1.",
+        "85.4....2",
+        "432......",
+        "1...69.83",
+        ".9.....6.",
+        "62.71...9",
+        "......194",
+        "5....4.37",
+        ".4.3..6..",
+      ])
+      done();
     });
     
     // Puzzles that are not 81 numbers/periods long show the message 
