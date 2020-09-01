@@ -31,7 +31,7 @@ app.use(function(req, res, next) {
     .send('Not Found');
 });
 
-const DEFAULT_PORT = 3000;
+const DEFAULT_PORT = 4000;
 
 //Start our server and tests!
 app.listen(process.env.PORT || DEFAULT_PORT, function () {
