@@ -67,8 +67,10 @@ suite('UnitTests', () => {
       ])
       done();
     });
-    
-    // Puzzles that are not 81 numbers/periods long show the message 
+  });
+
+  suite('Show error on invalid puzzle', () => {
+    // Puzzles that are not 81 numbers/periods long show the message
     // "Error: Expected puzzle to be 81 characters long." in the
     // `div` with the id "error-msg"
     test('Shows an error for puzzles that are not 81 numbers long', done => {
@@ -76,34 +78,47 @@ suite('UnitTests', () => {
       const longStr = '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6...';
       const errorMsg = 'Error: Expected puzzle to be 81 characters long.';
       const errorDiv = document.getElementById('error-msg');
-      
-      // done();
+      const textArea = document.getElementById('text-input');
+
+      textArea.value = shortStr;
+      Solver.handleSolve();
+
+      assert.equal(errorDiv.textContent, errorMsg);
+
+      textArea.value = longStr;
+      Solver.handleSolve();
+
+      assert.equal(errorDiv.textContent, errorMsg);
+
+      done();
     });
   });
 
-  suite('Function solveStringPuzzle()', () => {
+  suite('Function hasValidPuzzleLength()', () => {
     // Valid complete puzzles pass
     test('Valid puzzles pass', done => {
       const input = '769235418851496372432178956174569283395842761628713549283657194516924837947381625';
-      assert.equal(Solver.solveStringPuzzle(input), input)
+      assert.isTrue(Solver.hasValidPuzzleLength(input))
       done();
     });
 
     // Invalid complete puzzles fail
     test('Invalid puzzles fail', done => {
       const input = '7792354188514963724321789561745692833958427616287135492836571945169248379473816';
-      assert.equal(Solver.solveStringPuzzle(input), 'Puzzle is not valid.')
+      assert.isFalse(Solver.hasValidPuzzleLength(input))
       done();
     });
   });
-  
-  
-  suite('Function ____()', () => {
+
+  suite('Function solveStringPuzzle()', () => {
     // Returns the expected solution for a valid, incomplete puzzle
     test('Returns the expected solution for an incomplete puzzle', done => {
       const input = '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..';
-      
-      // done();
+      const solution = '769235418851496372432178956174569283395842761628713549283657194516924837947381625';
+
+      assert.equal(Solver.solveStringPuzzle(input), solution)
+
+      done();
     });
   });
 });

@@ -11,6 +11,7 @@ const solver = new SudokuSolver();
 
 const textArea = document.getElementById('text-input');
 const solveButton = document.getElementById('solve-button');
+const errorContainer = document.getElementById('error-msg');
 const gridInputs = document.getElementsByClassName('sudoku-input')
 
 const DEFAULT_PUZZLE_STRING = '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..'
@@ -41,6 +42,9 @@ const ROW_COUNT = 9;
 const INVALID_PUZZLE_ERROR_MESSAGE = "Error: Expected puzzle to be 81 characters long.";
 
 const getArrayPuzzle = stringPuzzle => splitEvery(9, stringPuzzle);
+
+const hasValidPuzzleLength = value => value.length === VALID_PUZZLE_LENGTH
+
 /**
  *
  * @param stringPuzzle
@@ -54,10 +58,15 @@ const solveStringPuzzle = (stringPuzzle, resultType = 'string') => {
 
 const handleSolve = () => {
   const puzzle = textArea.value;
-  const solution = solveStringPuzzle(puzzle);
+  if (hasValidPuzzleLength(puzzle)) {
+    errorContainer.textContent = '';
+    const solution = solveStringPuzzle(puzzle);
 
-  textArea.value = solution;
-  fillCells(solution);
+    textArea.value = solution;
+    fillCells(solution);
+  } else {
+    errorContainer.textContent = INVALID_PUZZLE_ERROR_MESSAGE;
+  }
 }
 
 const isValidInput = strVal => VALID_CELL_VALUES.includes(strVal);
@@ -84,7 +93,7 @@ const updateTextAreaFromGrid = (value, gridCellId) => {
   textArea.value = textArea.value.substring(0, strValIdx) + newValue + textArea.value.substring(strValIdx + 1);
 }
 
-const handleTextChange = (({ target: { value } }) => value.length === VALID_PUZZLE_LENGTH && fillCells(value));
+const handleTextChange = (({ target: { value } }) => hasValidPuzzleLength(value) && fillCells(value));
 
 const handleInputChange = (({ target: { value, id } }) => {
   if (isValidInput(value) || isEmptyString(value)) {
@@ -105,6 +114,7 @@ try {
     updateTextAreaFromGrid,
     solveStringPuzzle,
     handleSolve,
+    hasValidPuzzleLength,
   }
 } catch (e) {
 }
