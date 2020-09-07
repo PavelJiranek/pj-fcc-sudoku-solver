@@ -6,34 +6,24 @@ const {
 const {
   floor,
   isEmptyString,
+  repeatStr,
 } = RA;
 const solver = new SudokuSolver();
 
+/*
+  * Elements
+*/
 const textArea = document.getElementById('text-input');
 const solveButton = document.getElementById('solve-button');
+const clearButton = document.getElementById('clear-button');
 const errorContainer = document.getElementById('error-msg');
 const gridInputs = document.getElementsByClassName('sudoku-input')
 
+
+/*
+  * Constants
+*/
 const DEFAULT_PUZZLE_STRING = '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..'
-
-document.addEventListener('DOMContentLoaded', () => {
-  // Load a simple puzzle into the text area
-  textArea.value = DEFAULT_PUZZLE_STRING;
-  console.log( // todo remove
-      textArea,
-      DEFAULT_PUZZLE_STRING.split('').length,
-      getArrayPuzzle(DEFAULT_PUZZLE_STRING),
-      solveStringPuzzle(DEFAULT_PUZZLE_STRING, 'string'),
-      solveStringPuzzle(DEFAULT_PUZZLE_STRING, 'array'),
-      gridInputs,
-  );
-  fillCells(DEFAULT_PUZZLE_STRING);
-  textArea.oninput = handleTextChange;
-  Array.from(gridInputs).forEach(input => input.oninput = handleInputChange);
-  solveButton.onclick = handleSolve;
-});
-
-
 const COLUMNS_MAP = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const VALID_CELL_VALUES = COLUMNS_MAP.map(String);
 const ROWS_MAP = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
@@ -41,9 +31,19 @@ const VALID_PUZZLE_LENGTH = 81;
 const ROW_COUNT = 9;
 const INVALID_PUZZLE_ERROR_MESSAGE = "Error: Expected puzzle to be 81 characters long.";
 
+document.addEventListener('DOMContentLoaded', () => {
+  // Load a simple puzzle into the text area
+  textArea.value = DEFAULT_PUZZLE_STRING;
+  fillCells(DEFAULT_PUZZLE_STRING);
+  textArea.oninput = handleTextChange;
+  Array.from(gridInputs).forEach(input => input.oninput = handleInputChange);
+  solveButton.onclick = handleSolve;
+  clearButton.onclick = handleClear;
+});
+
 const getArrayPuzzle = stringPuzzle => splitEvery(9, stringPuzzle);
 
-const hasValidPuzzleLength = value => value.length === VALID_PUZZLE_LENGTH
+const hasValidPuzzleLength = value => value.length === VALID_PUZZLE_LENGTH;
 
 /**
  *
@@ -67,6 +67,10 @@ const handleSolve = () => {
   } else {
     errorContainer.textContent = INVALID_PUZZLE_ERROR_MESSAGE;
   }
+}
+const handleClear = () => {
+  textArea.value = '';
+  fillCells(repeatStr('.', VALID_PUZZLE_LENGTH));
 }
 
 const isValidInput = strVal => VALID_CELL_VALUES.includes(strVal);
@@ -115,6 +119,7 @@ try {
     solveStringPuzzle,
     handleSolve,
     hasValidPuzzleLength,
+    handleClear
   }
 } catch (e) {
 }

@@ -76,8 +76,18 @@ suite('Functional Tests', () => {
         // Pressing the "Clear" button clears the sudoku
         // grid and the text area
         test('Function clearInput()', done => {
+            const TESTING_PUZZLE = PUZZLES[1][0];
+            const textArea = document.getElementById('text-input');
+            const gridInputsArr = Array.from(document.getElementsByClassName('sudoku-input'));
+            textArea.value = TESTING_PUZZLE;
+            assert.equal(textArea.value, TESTING_PUZZLE) // sanity check
 
-            // done();
+            Solver.handleClear();
+
+            const gridValues = gridInputsArr.map(input => input.value).join('');
+            assert.equal(textArea.value, '');
+            assert.equal(gridValues, '');
+            done();
         });
 
         // Pressing the "Solve" button solves the puzzle and
