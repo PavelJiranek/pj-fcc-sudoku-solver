@@ -81,19 +81,19 @@ suite('UnitTests', () => {
     });
   });
 
-  suite('Function ____()', () => {
+  suite('Function solveStringPuzzle()', () => {
     // Valid complete puzzles pass
     test('Valid puzzles pass', done => {
       const input = '769235418851496372432178956174569283395842761628713549283657194516924837947381625';
-
-      // done();
+      assert.equal(Solver.solveStringPuzzle(input), input)
+      done();
     });
 
     // Invalid complete puzzles fail
     test('Invalid puzzles fail', done => {
-      const input = '779235418851496372432178956174569283395842761628713549283657194516924837947381625';
-
-      // done();
+      const input = '7792354188514963724321789561745692833958427616287135492836571945169248379473816';
+      assert.equal(Solver.solveStringPuzzle(input), 'Puzzle is not valid.')
+      done();
     });
   });
   

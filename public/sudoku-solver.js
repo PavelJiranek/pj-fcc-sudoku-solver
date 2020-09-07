@@ -10,6 +10,7 @@ const {
 const solver = new SudokuSolver();
 
 const textArea = document.getElementById('text-input');
+const solveButton = document.getElementById('solve-button');
 const gridInputs = document.getElementsByClassName('sudoku-input')
 
 const DEFAULT_PUZZLE_STRING = '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..'
@@ -28,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
   fillCells(DEFAULT_PUZZLE_STRING);
   textArea.oninput = handleTextChange;
   Array.from(gridInputs).forEach(input => input.oninput = handleInputChange);
+  solveButton.onclick = handleSolve;
 });
 
 
@@ -36,6 +38,7 @@ const VALID_CELL_VALUES = COLUMNS_MAP.map(String);
 const ROWS_MAP = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
 const VALID_PUZZLE_LENGTH = 81;
 const ROW_COUNT = 9;
+const INVALID_PUZZLE_ERROR_MESSAGE = "Error: Expected puzzle to be 81 characters long.";
 
 const getArrayPuzzle = stringPuzzle => splitEvery(9, stringPuzzle);
 /**
@@ -48,6 +51,14 @@ const solveStringPuzzle = (stringPuzzle, resultType = 'string') => {
   const parsedStr = replace(/\./g, '0', stringPuzzle);
   return solver.solve(parsedStr, { resultType });
 };
+
+const handleSolve = () => {
+  const puzzle = textArea.value;
+  const solution = solveStringPuzzle(puzzle);
+
+  textArea.value = solution;
+  fillCells(solution);
+}
 
 const isValidInput = strVal => VALID_CELL_VALUES.includes(strVal);
 
@@ -92,6 +103,8 @@ try {
     getArrayPuzzle,
     fillCells,
     updateTextAreaFromGrid,
+    solveStringPuzzle,
+    handleSolve,
   }
 } catch (e) {
 }

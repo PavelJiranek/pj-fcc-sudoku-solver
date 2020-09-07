@@ -81,10 +81,21 @@ suite('Functional Tests', () => {
         });
 
         // Pressing the "Solve" button solves the puzzle and
-        // fills in the grid with the solution
-        test('Function showSolution(solve(input))', done => {
+        // fills in the grid and textarea with the solution
+        test('Function handleSolve()', done => {
+            const TESTING_PUZZLE = PUZZLES[1][0];
+            const TESTING_PUZZLE_SOLUTION = PUZZLES[1][1];
+            const textArea = document.getElementById('text-input');
+            const gridInputsArr = Array.from(document.getElementsByClassName('sudoku-input'));
+            textArea.value = TESTING_PUZZLE;
+            assert.equal(textArea.value, TESTING_PUZZLE) // sanity check
 
-            // done();
+            Solver.handleSolve();
+
+            const gridValues = gridInputsArr.map(input => input.value).join('');
+            assert.equal(textArea.value, TESTING_PUZZLE_SOLUTION);
+            assert.equal(gridValues, TESTING_PUZZLE_SOLUTION);
+            done();
         });
     });
 });
