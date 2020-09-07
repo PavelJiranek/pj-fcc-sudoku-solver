@@ -22,7 +22,9 @@ suite('Functional Tests', () => {
         return JSDOM.fromFile('./views/index.html')
             .then((dom) => {
                 global.window = dom.window;
-                global.document = dom.window.document;
+                if (typeof document === 'undefined') {
+                    global.document = dom.window.document;
+                }
                 global.R = R;
                 global.RA = RA;
                 global.SudokuSolver = SudokuSolver;
@@ -50,8 +52,23 @@ suite('Functional Tests', () => {
         // Entering a valid number in the grid automatically updates
         // the puzzle string in the text area
         test('Valid number in grid updates the puzzle string in the text area', done => {
+            const TESTING_PUZZLE = PUZZLES[0][0];
+            const testingInput = document.getElementById('A6');
+            const textArea = document.getElementById('text-input');
+            textArea.value = TESTING_PUZZLE;
+            assert.equal(textArea.value, TESTING_PUZZLE) // sanity check
 
-            // done();
+            const NEW_VALUE = '6';
+            const NEW_VALUE_IDX = 5;
+            testingInput.value = NEW_VALUE;
+            Solver.updateTextAreaFromGrid(testingInput.value, testingInput.id)
+
+            assert.equal(textArea.value,
+                textArea.value.substring(0, NEW_VALUE_IDX)
+                + NEW_VALUE
+                + textArea.value.substring(NEW_VALUE_IDX + 1),
+            );
+            done();
         });
     });
 

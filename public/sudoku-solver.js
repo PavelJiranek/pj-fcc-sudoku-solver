@@ -5,11 +5,12 @@ const {
 } = R;
 const {
   floor,
+  isEmptyString,
 } = RA;
 const solver = new SudokuSolver();
 
 const textArea = document.getElementById('text-input');
-const sudoInputs = document.getElementsByClassName('sudoku-input')
+const gridInputs = document.getElementsByClassName('sudoku-input')
 
 const DEFAULT_PUZZLE_STRING = '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..'
 
@@ -22,10 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
       getArrayPuzzle(DEFAULT_PUZZLE_STRING),
       solveStringPuzzle(DEFAULT_PUZZLE_STRING, 'string'),
       solveStringPuzzle(DEFAULT_PUZZLE_STRING, 'array'),
-      sudoInputs,
+      gridInputs,
   );
   fillCells(DEFAULT_PUZZLE_STRING);
   textArea.oninput = handleTextChange;
+  Array.from(gridInputs).forEach(input => input.oninput = handleInputChange);
 });
 
 
@@ -33,6 +35,7 @@ const COLUMNS_MAP = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const VALID_CELL_VALUES = COLUMNS_MAP.map(String);
 const ROWS_MAP = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
 const VALID_PUZZLE_LENGTH = 81;
+const ROW_COUNT = 9;
 
 const getArrayPuzzle = stringPuzzle => splitEvery(9, stringPuzzle);
 /**
@@ -60,7 +63,23 @@ const fillCells = stringPuzzle => stringPuzzle.split('').forEach((val, valIdx) =
   }
 })
 
+const updateTextAreaFromGrid = (value, gridCellId) => {
+  const [row, col] = gridCellId;
+  const rowIdx = ROWS_MAP.indexOf(row);
+  const colIdx = COLUMNS_MAP.indexOf(Number(col));
+  const rowSum = ROW_COUNT * rowIdx;
+  const strValIdx = rowSum + colIdx;
+  const newValue = isValidInput(value) ? value : '.';
+  textArea.value = textArea.value.substring(0, strValIdx) + newValue + textArea.value.substring(strValIdx + 1);
+}
+
 const handleTextChange = (({ target: { value } }) => value.length === VALID_PUZZLE_LENGTH && fillCells(value));
+
+const handleInputChange = (({ target: { value, id } }) => {
+  if (isValidInput(value) || isEmptyString(value)) {
+    updateTextAreaFromGrid(value, id);
+  }
+});
 
 /*
   Export your functions for testing in Node.
@@ -71,7 +90,8 @@ try {
   module.exports = {
     isValidInput,
     getArrayPuzzle,
-    fillCells
+    fillCells,
+    updateTextAreaFromGrid,
   }
 } catch (e) {
 }
